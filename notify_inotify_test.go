@@ -2,6 +2,7 @@
 // Use of this source code is governed by the MIT license that can be
 // found in the LICENSE file.
 
+//go:build linux
 // +build linux
 
 package notify
@@ -10,7 +11,6 @@ import "testing"
 
 func TestNotifySystemAndGlobalMix(t *testing.T) {
 	n := NewNotifyTest(t, "testdata/vfs.txt")
-	defer n.Close()
 
 	ch := NewChans(2)
 
@@ -29,7 +29,6 @@ func TestNotifySystemAndGlobalMix(t *testing.T) {
 
 func TestUnknownEvent(t *testing.T) {
 	n := NewNotifyTest(t, "testdata/vfs.txt")
-	defer n.Close()
 
 	ch := NewChans(1)
 

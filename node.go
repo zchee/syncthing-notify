@@ -6,6 +6,7 @@ package notify
 
 import (
 	"errors"
+	"io/fs"
 	"os"
 	"path/filepath"
 )
@@ -95,7 +96,7 @@ Traverse:
 			if err != nil {
 				return err
 			}
-			if fi.Mode()&(os.ModeSymlink|os.ModeDir) == os.ModeDir {
+			if fi.Mode()&(fs.ModeSymlink|fs.ModeDir) == fs.ModeDir {
 				stack = append(stack, nd.addchild(name, name[len(nd.Name)+1:]))
 			}
 		}

@@ -2,11 +2,13 @@
 // Use of this source code is governed by the MIT license that can be
 // found in the LICENSE file.
 
+//go:build (darwin && kqueue) || (darwin && !cgo) || dragonfly || freebsd || netbsd || openbsd
 // +build darwin,kqueue darwin,!cgo dragonfly freebsd netbsd openbsd
 
 package notify
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"syscall"
@@ -61,6 +63,11 @@ func (*kq) NewWatched(p string, fi os.FileInfo) (*watched, error) {
 		// cannot be followed - ignore it instead of failing. See e.g.
 		// https://github.com/libinotify-kqueue/libinotify-kqueue/blob/a822c8f1d75404fe3132f695a898dcd42fe8afbc/patches/freebsd11-O_SYMLINK.patch
 		if os.IsNotExist(err) && fi.Mode()&os.ModeSymlink == os.ModeSymlink {
+			return nil, errSkip
+		}
+		// FreeBSD can't open unix domain sockets and returns "operation not supported" error.
+		// Ignore it instead of failing.
+		if errors.Is(err, syscall.ENOTSUP) && fi.Mode()&os.ModeSocket == os.ModeSocket {
 			return nil, errSkip
 		}
 		return nil, err

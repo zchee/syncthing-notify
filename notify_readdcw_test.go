@@ -2,6 +2,7 @@
 // Use of this source code is governed by the MIT license that can be
 // found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package notify
@@ -10,7 +11,6 @@ import "testing"
 
 func TestNotifySystemSpecificEvent(t *testing.T) {
 	n := NewNotifyTest(t, "testdata/vfs.txt")
-	defer n.Close()
 
 	ch := NewChans(1)
 
@@ -32,7 +32,6 @@ func TestNotifySystemSpecificEvent(t *testing.T) {
 
 func TestUnknownEvent(t *testing.T) {
 	n := NewNotifyTest(t, "testdata/vfs.txt")
-	defer n.Close()
 
 	ch := NewChans(1)
 
@@ -41,7 +40,6 @@ func TestUnknownEvent(t *testing.T) {
 
 func TestNotifySystemAndGlobalMix(t *testing.T) {
 	n := NewNotifyTest(t, "testdata/vfs.txt")
-	defer n.Close()
 
 	ch := NewChans(3)
 
